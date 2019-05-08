@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pm2": "pm start /var/www/vhosts/spamCallFilter/index.js -i 1 --name \"spamCallFilter\""
+    "pm2": "pm2 start /var/www/vhosts/spamCallFilter/index.js -i 1 --name \"spamCallFilter\""
   },
   "author": "",
   "license": "ISC",

@@ -47,14 +47,27 @@ async function handlePhoneNumber({req, res, next}) {
 
 async function handleFetchByPhoneNumber({req, res, next}) {
   const {
-    phone_number
+    phone_number,
+    byPath
   } = req.query;
-  assert(phone_number, "phone number is required");
+  try {
+    assert(phone_number, "phone number is required");
+    assert(phone_number.length === 11, "country and area code required");
+    assert(phone_number.substring(0, 1) == 1, "country code unsupported: " + phone_number.substring(0, 1));
+  } 
+  catch(err) {
+    return next(err.message);
+  }
   fetch(`https://${config.twilio.TWILIO_ACCOUNT_SID}:${config.twilio.TWILIO_AUTH_TOKEN}@lookups.twilio.com/v1/PhoneNumbers/+${phone_number}/?AddOns=nomorobo_spamscore`)
     .then(fRes => fRes.json())
     .then(json => {
       console.log(json);
-      res.send(json);
+      if (byPath) {
+        res.send(json[byPath]);
+      }
+      else {
+        res.send(json);
+      }
     })
     .catch(next);
 }
