@@ -5,7 +5,16 @@
   },
   "twilio": {
     "TWILIO_ACCOUNT_SID": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "TWILIO_AUTH_TOKEN": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    "TWILIO_AUTH_TOKEN": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "supportedAddons": [
+      "nomorobo_spamscore"
+    ],
+    "response_eval": {
+      "nomorobo_spamscore": {
+        "condition": {"gte": 1},
+        "result_prop": "result.score"
+      }
+    }
   },
   "access_token": {
     "id": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"

@@ -1,9 +1,26 @@
 const assert = require('assert');
-const fetch = require('node-fetch');
 
 module.exports = (app) => {
 
-  debug = app.modules.debug('routes:spamScoreByPhoneNumber');
+  const routeName = 'spamScoreByPhoneNumber';
+
+  debug = app.modules.debug(`routes:${routeName}`);
+
+  function cachingTwilioLookup({args}) {
+    const {
+      phone_number,
+      addon
+    } = args;
+    return app.modules.cache.getAsync({
+      key: `${app.config.local.namespace}:${routeName}:${addon}:${phone_number}`,
+      setterFn: (cb) => {
+        app.modules.twilio.lookup({
+          phone_number,
+          addon
+        }, cb);
+      }
+    });
+  }
 
   return async function({req, res, next}) {
 
@@ -22,23 +39,28 @@ module.exports = (app) => {
     catch(err) {
       return next(err.message);
     }
-    app.modules.cache.getAsync({
-      key: `${app.config.local.namespace}:spamScoreByPhoneNumber:nomorobo_spamscore:${phone_number}`,
-      setterFn: (cb) => {
-        fetch(`https://${app.config.twilio.TWILIO_ACCOUNT_SID}:${app.config.twilio.TWILIO_AUTH_TOKEN}@lookups.twilio.com/v1/PhoneNumbers/+${phone_number}/?AddOns=nomorobo_spamscore`)
-          .then(fRes => fRes.json())
-          .then(json => cb(undefined, json))
-          .catch(cb)
+
+    let addonName, i, lookupResponse, isSpamFromResponse = false;
+    for (i in app.config.twilio.supportedAddons) {
+      addonName = supportedAddons[i];
+      try {
+        lookupResponse = await cachingTwilioLookup({args: {
+          phone_number,
+          addon: addonName
+        }});
+        isSpamFromResponse = app.modules.twilio.isSpamFromLookupResponse({
+          response: lookupResponse.value,
+          addon: addonName
+        });
       }
-    }).then(({value, result}) => {
-      debug(JSON.stringify(value));
-      if (byPath) {
-        debug(byPath);
-        res.send(app.modules.deepValue(value, byPath));
+      catch(err) {
+        debug(err);
       }
-      else {
-        res.send(value);
-      }
-    }).catch(next);
+      //if its found to spam by any provider we honor it
+      if (isSpamFromResponse) break;
+    }
+    res.send({
+      is_spam: isSpamFromResponse
+    });
   }
 }
