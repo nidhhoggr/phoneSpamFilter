@@ -6,7 +6,7 @@ module.exports = (app) => {
   return connect();
 
   function debug() {
-    return app.modules.debug('modules:redis')(arguments);
+    return app.modules.debug('modules:redis')(arguments[0]);
   }
 
   function connect() {

@@ -3,7 +3,7 @@ const util = require('util');
 module.exports = (app) => {
 
   function debug() {
-    return app.modules.debug('modules:cache')(arguments);
+    return app.modules.debug('modules:cache')(arguments[0]);
   }
 
   function get({key, setterFn}, callback) {
