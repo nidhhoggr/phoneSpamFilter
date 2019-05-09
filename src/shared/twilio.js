@@ -16,7 +16,7 @@ module.exports = (app) => {
     const conditionThresholdValue = addonResponseEval.condition[conditionOperator];
     const addonScoreResult = app.modules.deepValue(response, `add_ons.results.${addon}.${addonResponseEval.result_prop}`);
     assert(conditionOperator, `Could not parse condition operator for ${addon}`);
-    assert(addonScoreResult, `Could not parse result from addon response for ${addon} from property ${addonResponseEval.result_prop}`);
+    assert(typeof addonScoreResult !== undefined || addonScoreResult !== null, `Could not parse result from addon response for ${addon} from property ${addonResponseEval.result_prop}`);
     switch (conditionOperator) {
       case "gte": {
         return parseInt(addonScoreResult) >= parseInt(conditionThresholdValue);
