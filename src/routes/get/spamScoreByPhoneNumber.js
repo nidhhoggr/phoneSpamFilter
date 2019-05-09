@@ -42,7 +42,7 @@ module.exports = (app) => {
 
     let addonName, i, lookupResponse, isSpamFromResponse = false;
     for (i in app.config.twilio.supportedAddons) {
-      addonName = supportedAddons[i];
+      addonName = app.config.twilio.supportedAddons[i];
       try {
         lookupResponse = await cachingTwilioLookup({args: {
           phone_number,
