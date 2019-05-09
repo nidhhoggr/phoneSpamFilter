@@ -15,6 +15,6 @@ function execCmd(cmd, options) {
   });
 }
 
-module.exports = {
+module.exports = (app) => ({
   execCmd
-};
+});

@@ -1,16 +1,20 @@
 {
-  "name": "spam-call-filter",
+  "name": "phone-spam-filter",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pm2": "pm2 start /var/www/vhosts/spamCallFilter/index.js -i 1 --name \"spamCallFilter\""
+    "pm2": "DEBUG=phoneSpamFilter:* pm2 start /var/www/vhosts/phoneSpamFilter/index.js -i 1 --name \"phoneSpamFilter\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.4",
+    "debug": "^4.1.1",
     "express": "^4.16.4",
-    "node-fetch": "^2.5.0"
+    "node-fetch": "^2.5.0",
+    "redis": "^2.8.0",
+    "require-directory": "^2.1.1"
   }
 }
