@@ -28,9 +28,11 @@ module.exports = (app) => {
       req.query.phone_number = "1".concat(req.query.phone_number);
     }
     const {
+      raw_phone_number,
       phone_number,
       byPath
     } = req.query;
+    debug(`receieved request for ${phone_number} - ${raw_phone_number}`);
     try {
       assert(phone_number, "phone number is required");
       assert(phone_number.length === 11, "country and area code required");

@@ -1,6 +1,4 @@
-module.exports = (app) => function(obj, path){
-  for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
-    obj = obj[path[i]];
-  };
-  return obj;
-};
+module.exports = (app) => 
+  (object, path, defaultValue) => 
+    path.split('.').reduce((xs, x) => 
+      (xs && xs[x]) ? xs[x] : defaultValue, object)
