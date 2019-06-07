@@ -2,6 +2,18 @@ const util = require('util');
 
 module.exports = (app) => {
 
+  function set({key, value}) {
+    let setter;
+    const { caching_ttl } = app.config.local;
+    if (caching_ttl) {
+      setter = app.modules.redis.setAsync(key, value, 'EX', caching_ttl);
+    }
+    else {
+      setter = app.modules.redis.setAsync(key, value);
+    }
+    return setter;
+  }
+
   function debug() {
     return app.modules.debug('modules:cache')(arguments[0]);
   }
@@ -16,7 +28,7 @@ module.exports = (app) => {
         setterFn((err, value) => {
           const stringified = JSON.stringify(value);
           debug(`Attempting to set ${key} to ${stringified}`);
-          app.modules.redis.setAsync(key, stringified, 'EX', 60 * 60 * 24 * 7).then(result => {
+          set({key, value: stringified}).then(result => {
             callback(undefined, {value, result});
           }).catch(callback);
         });

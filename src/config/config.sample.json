@@ -1,7 +1,8 @@
 {
   "local": {
     "namespace": "phoneSpamFilter",
-    "port": 3001
+    "port": 3001,
+    "caching_ttl": 604800
   },
   "twilio": {
     "TWILIO_ACCOUNT_SID": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
