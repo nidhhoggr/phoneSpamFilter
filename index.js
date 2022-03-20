@@ -16,10 +16,10 @@ function bootload() {
     modules: {}
   };
 
-  let k, sModule;
+  let k;
   const shared = requireDirectory(module, './src/shared/');
   for (k in shared) {
-    sModule = shared[k];
+    const sModule = shared[k];
     debug(k, sModule);
     debug(`Binding module (${k}) to modules context`);
     context.modules[k] = sModule(context);
@@ -31,10 +31,10 @@ function bootload() {
 }
 
 function bindRoutesByMethod({method, context}) {
-  let j, route;
+  let j;
   const routes = requireDirectory(module, `./src/routes/${method}/`);
   for (j in routes) {
-    route = routes[j];
+    const route = routes[j];
     debug(`Binding route (${j}) to routing as a (${method}) method`);
     context.express[method](`/api/v1/${j}`, [authorize], (req, res, next) => route(context)({req, res, next}));
   }
